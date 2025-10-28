@@ -1,0 +1,126 @@
+version: "3.8"
+
+############################
+#  SERVICES
+############################
+services:
+  # ─────────── MongoDB ───────────
+  mongodb:
+    image: mongo:7
+    container_name: boring-media-mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: boringmedia
+    volumes:
+      - mongodb_data:/data/db
+      - ./mongo-init:/docker-entrypoint-initdb.d:ro
+    restart: unless-stopped
+    networks:
+      - bpc-net
+
+  # ─────────── SDK API ───────────
+  sdk-service:
+    build:
+      context: ../sdk
+    ports:
+      - "5050:5000"  # Changed to 5050 to avoid macOS AirPlay conflict on 5000
+    env_file:                
+      - .env
+    environment:
+      API_KEY: ${API_KEY}    
+      REGION:  ${REGION}
+      MONGODB_URI: mongodb://admin:password@mongodb:27017/boringmedia?authSource=admin
+    depends_on:
+      - mongodb
+    restart: unless-stopped
+    networks:
+      - bpc-net
+
+  # ───────── Container XDR ────────
+  containerxdr-service:
+    build:
+      context: ../containerxdr
+    ports:
+      - "8081:8081"
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETGID
+      - SETUID
+      - NET_BIND_SERVICE
+    networks:
+      - bpc-net
+
+  # ───────────── UI (TypeScript Edition) ───────────────
+  ui:
+    build:
+      context: ../ui           # uses the new TypeScript UI with Vite
+    ports:
+      - "8080:80"             # host:container  → browse http://localhost:8080
+    depends_on:
+      - sdk-service           # ensure backend is up first
+    environment:
+      # Runtime base URL for your frontend to call the SDK API **inside** the Docker network
+      VITE_API_BASE_URL: http://sdk-service:5000
+      VITE_OLLAMA_URL: http://ollama-service:11434
+      VITE_AICHAT_URL: http://aichat-service:5001
+    volumes:
+      # Mount videos directory - separated from UI public folder
+      - ../media/videos:/usr/share/nginx/html/videos:ro
+    restart: unless-stopped
+    networks:
+      - bpc-net
+
+  # ───────────── Ollama ───────────────
+  ollama-service:
+    # Use the arm64 version for Apple Silicon
+    image: ollama/ollama:latest
+    volumes:
+      - ollama-data:/root/.ollama
+    ports:
+      - "11434:11434"
+    platform: linux/arm64  # Ensures compatibility with Apple Silicon
+    environment:
+      - OLLAMA_HOST=0.0.0.0
+      - OLLAMA_ORIGINS=*
+    networks:
+      - bpc-net
+
+  # ───────────── AI Chat Service ───────────────
+  aichat-service:
+    build:
+      context: ../aichat
+    ports:
+      - "5001:5001"
+    depends_on:
+      - ollama-service
+    environment:
+      - OLLAMA_URL=http://ollama-service:11434
+      - OLLAMA_MODEL=tinyllama:1.1b-chat  # Use smaller model for faster startup
+      - API_KEY=${API_KEY}
+    restart: unless-stopped
+    networks:
+      - bpc-net
+
+############################
+#  SHARED NETWORK
+############################
+networks:
+  bpc-net:
+    driver: bridge
+
+############################
+#  VOLUMES
+############################
+volumes:
+  ollama-data:
+    driver: local
+  mongodb_data:
+    driver: local

@@ -1,0 +1,10 @@
+# Place your video files here
+# 
+# Supported formats: .mp4, .webm, .ogg
+# 
+# To add videos:
+# 1. Place your video files in this directory (or subdirectories)
+# 2. Add thumbnails with the same name in ui/public/images/ 
+#    (e.g., my-video.mp4 → my-video.png in images/)
+# 3. Rebuild the UI container: docker compose up --build ui
+

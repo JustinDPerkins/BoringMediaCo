@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ui
+  namespace: boring-paper-co
+  labels:
+    cloud-provider: azure
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ui
+  template:
+    metadata:
+      labels:
+        app: ui
+        cloud-provider: azure
+    spec:
+      containers:
+      - name: ui
+        image: boringpapercoumjjbd.azurecr.io/boringpaperco/ui:latest
+        ports:
+        - containerPort: 80
+        envFrom:
+        - configMapRef:
+            name: app-config
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ui-service
+  namespace: boring-paper-co
+  labels:
+    cloud-provider: azure
+spec:
+  selector:
+    app: ui
+  ports:
+  - port: 80
+    targetPort: 80
+  type: ClusterIP 
