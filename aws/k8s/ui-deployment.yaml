@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ui
-  namespace: boring-paper-co
+  namespace: boring-media-co
   labels:
     cloud-provider: aws
 spec:
@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: ui
-        image: 975050242527.dkr.ecr.us-west-2.amazonaws.com/boringpaperco/ui:latest
+        image: 975050242527.dkr.ecr.us-west-2.amazonaws.com/boringmediaco/ui:latest
         ports:
         - containerPort: 80
         envFrom:
@@ -36,7 +36,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: ui-service
-  namespace: boring-paper-co
+  namespace: boring-media-co
   labels:
     cloud-provider: aws
 spec:

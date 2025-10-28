@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: aichat
-  namespace: boring-paper-co
+  namespace: boring-media-co
   labels:
     cloud-provider: aws
 spec:
@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: aichat
-        image: 975050242527.dkr.ecr.us-west-2.amazonaws.com/boringpaperco/aichat:latest
+        image: 975050242527.dkr.ecr.us-west-2.amazonaws.com/boringmediaco/aichat:latest
         ports:
         - containerPort: 5001
         env:
@@ -44,7 +44,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: aichat-service
-  namespace: boring-paper-co
+  namespace: boring-media-co
   labels:
     cloud-provider: aws
 spec:

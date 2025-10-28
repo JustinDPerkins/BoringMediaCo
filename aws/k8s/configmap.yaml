@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: app-config
-  namespace: boring-paper-co
+  namespace: boring-media-co
 data:
   ENVIRONMENT: "production"
   REGION: "us-west-2"
@@ -15,4 +15,4 @@ data:
   VITE_AICHAT_URL: "/api/chat"
   VITE_XDR_WS_URL: "/api/xdr/terminal"
   # Optional: Add specific allowed origins for WebSocket connections
-  ALLOWED_ORIGINS: "http://boringpapercompany.com,http://azure.boringpapercompany.com,http://gcp.boringpapercompany.com, https://boringpapercompany.com,https://azure.boringpapercompany.com,https://gcp.boringpapercompany.com" 
+  ALLOWED_ORIGINS: "http://boringmediacompany.com,http://azure.boringmediacompany.com,http://gcp.boringmediacompany.com, https://boringmediacompany.com,https://azure.boringmediacompany.com,https://gcp.boringmediacompany.com" 

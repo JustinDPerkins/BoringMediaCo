@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: app-config
-  namespace: boring-paper-co
+  namespace: boring-media-co
 data:
   OLLAMA_HOST: "0.0.0.0"
   OLLAMA_ORIGINS: "*"

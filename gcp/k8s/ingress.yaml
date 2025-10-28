@@ -2,7 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: boring-paper-ingress
-  namespace: boring-paper-co
+  namespace: boring-media-co
   annotations:
     kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
@@ -10,7 +10,7 @@ metadata:
     nginx.ingress.kubernetes.io/websocket-services: "containerxdr-service"
 spec:
   rules:
-  - host: gcp.boringpapercompany.com  # Your domain
+  - host: gcp.boringmediacompany.com  # Your domain
     http:
       paths:
       - path: /

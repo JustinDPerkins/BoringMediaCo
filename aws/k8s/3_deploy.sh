@@ -57,7 +57,7 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: app-secrets
-  namespace: boring-paper-co
+  namespace: boring-media-co
 type: Opaque
 data:
   # Base64 encoded values - replace with your actual encoded API_KEY and REGION
@@ -144,6 +144,11 @@ kubectl apply -f configmap.yaml
 kubectl apply -f secret.yaml
 kubectl apply -f pvc.yaml
 
+# Deploy MongoDB first (needed by SDK)
+echo "🗄️  Deploying MongoDB..."
+kubectl apply -f mongodb-deployment.yaml
+sleep 5  # Give MongoDB a moment to start
+
 kubectl apply -f ollama-deployment.yaml
 kubectl apply -f sdk-deployment.yaml
 kubectl apply -f containerxdr-deployment.yaml
@@ -155,13 +160,13 @@ kubectl apply -f ingress-nginx.yaml
 echo "✅ Deployment complete!"
 echo ""
 echo "📊 Checking deployment status..."
-kubectl get pods -n boring-paper-co
+kubectl get pods -n boring-media-co
 echo ""
 echo "�� Services:"
-kubectl get services -n boring-paper-co
+kubectl get services -n boring-media-co
 echo ""
 echo "🔗 Ingress:"
-kubectl get ingress -n boring-paper-co
+kubectl get ingress -n boring-media-co
 
 echo ""
 echo "📝 Next steps:"
@@ -180,5 +185,5 @@ echo "🔍 To check EBS CSI Driver status:"
 echo "   kubectl get pods -n kube-system -l app=ebs-csi-controller"
 echo ""
 echo "💾 To test EBS volumes:"
-echo "   kubectl get pvc -n boring-paper-co"
+echo "   kubectl get pvc -n boring-media-co"
  

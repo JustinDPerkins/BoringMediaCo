@@ -1,4 +1,4 @@
-# Boring Paper Co - AWS EKS Deployment
+# Boring Media Co - AWS EKS Deployment
 
 ## Prerequisites
 
@@ -58,13 +58,13 @@ chmod +x *.sh
 
 ```bash
 # Check deployment status
-kubectl get pods -n boring-paper-co
+kubectl get pods -n boring-media-co
 
 # Get load balancer URL
 kubectl get service ingress-nginx-controller -n ingress-nginx
 
 # View logs for a service
-kubectl logs -f deployment/sdk -n boring-paper-co
+kubectl logs -f deployment/sdk -n boring-media-co
 ```
 
 ## Destruction

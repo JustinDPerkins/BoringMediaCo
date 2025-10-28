@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: containerxdr
-  namespace: boring-paper-co
+  namespace: boring-media-co
   labels:
     cloud-provider: gcp
 spec:
@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: containerxdr
-        image: us-central1-docker.pkg.dev/justin-dev-412922/boringpaperco-containerxdr/boringpaperco/containerxdr:latest
+        image: us-central1-docker.pkg.dev/justin-dev-412922/boringmediaco-containerxdr/boringmediaco/containerxdr:latest
         ports:
         - containerPort: 8081
         envFrom:
@@ -48,7 +48,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: containerxdr-service
-  namespace: boring-paper-co
+  namespace: boring-media-co
   labels:
     cloud-provider: gcp
 spec:

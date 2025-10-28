@@ -35,7 +35,7 @@ echo "🎉 All deployment files updated to use: $ACR_SERVER"
 echo ""
 echo "📝 Image references now point to:"
 for service in "${services[@]}"; do
-    echo "  ✅ $service: $ACR_SERVER/boringpaperco/$service:latest"
+    echo "  ✅ $service: $ACR_SERVER/boringmediaco/$service:latest"
 done
 
 echo ""

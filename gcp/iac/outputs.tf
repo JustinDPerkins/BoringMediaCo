@@ -60,7 +60,7 @@ output "container_image_urls" {
   description = "Full container image URLs for each service"
   value = {
     for repo_name in var.artifact_registry_repositories :
-    repo_name => "${var.region}-docker.pkg.dev/${var.project_id}/boringpaperco-${repo_name}/boringpaperco/${repo_name}:latest"
+    repo_name => "${var.region}-docker.pkg.dev/${var.project_id}/boringmediaco-${repo_name}/boringmediaco/${repo_name}:latest"
   }
 }
 

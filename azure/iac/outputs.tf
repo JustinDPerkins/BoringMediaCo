@@ -67,7 +67,7 @@ output "acr_repository_urls" {
   description = "ACR repository URLs for each service"
   value = {
     for repo_name in var.acr_repositories :
-    repo_name => "${azurerm_container_registry.acr.login_server}/boringpaperco/${repo_name}"
+    repo_name => "${azurerm_container_registry.acr.login_server}/boringmediaco/${repo_name}"
   }
 }
 

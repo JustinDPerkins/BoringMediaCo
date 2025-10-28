@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Boring Paper Co - Build and Push Images to Google Artifact Registry
+# Boring Media Co - Build and Push Images to Google Artifact Registry
 
 set -e
 
@@ -27,7 +27,7 @@ for service in "${services[@]}"; do
     echo "🔨 Building $service..."
     
     # Artifact Registry URL format: region-docker.pkg.dev/project-id/repository-name/image-name:tag
-    IMAGE_URL="$REGISTRY_BASE_URL/boringpaperco-$service/boringpaperco/$service:latest"
+    IMAGE_URL="$REGISTRY_BASE_URL/boringmediaco-$service/boringmediaco/$service:latest"
     
     if [ "$service" == "ui" ]; then
         # Build UI with relative URLs (works with any domain/IP)
@@ -53,7 +53,7 @@ echo "🎉 All images built and pushed to Terraform-created Artifact Registry!"
 echo ""
 echo "📝 Images pushed to:"
 for service in "${services[@]}"; do
-    echo "  ✅ $service: $REGISTRY_BASE_URL/boringpaperco-$service/boringpaperco/$service:latest"
+    echo "  ✅ $service: $REGISTRY_BASE_URL/boringmediaco-$service/boringmediaco/$service:latest"
 done
 echo ""
 echo "🚀 Next steps:"

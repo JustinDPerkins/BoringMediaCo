@@ -26,11 +26,11 @@ fi
 
 # Remove application namespace (this will delete all resources in the namespace)
 echo "🗑️  Removing application namespace and all resources..."
-kubectl delete namespace boring-paper-co --ignore-not-found=true
+kubectl delete namespace boring-media-co --ignore-not-found=true
 
 # Wait for namespace to be fully deleted
 echo "⏳ Waiting for namespace deletion to complete..."
-while kubectl get namespace boring-paper-co > /dev/null 2>&1; do
+while kubectl get namespace boring-media-co > /dev/null 2>&1; do
     echo "   Still deleting namespace..."
     sleep 5
 done
@@ -81,7 +81,7 @@ done
 
 # Remove any orphaned persistent volumes
 echo "🗑️  Checking for orphaned persistent volumes..."
-kubectl get pv | grep boring-paper-co || echo "   No orphaned PVs found"
+kubectl get pv | grep boring-media-co || echo "   No orphaned PVs found"
 
 # Remove any orphaned load balancers (show them for manual cleanup if needed)
 echo "🗑️  Checking for orphaned load balancers..."

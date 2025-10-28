@@ -12,7 +12,7 @@ resource "aws_vpc" "main" {
   enable_dns_support   = true
 
   tags = {
-    Name = "boring-paper-vpc-${random_string.suffix.result}"
+    Name = "boring-media-vpc-${random_string.suffix.result}"
   }
 }
 
@@ -21,7 +21,7 @@ resource "aws_internet_gateway" "main" {
   vpc_id = aws_vpc.main.id
 
   tags = {
-    Name = "boring-paper-igw-${random_string.suffix.result}"
+    Name = "boring-media-igw-${random_string.suffix.result}"
   }
 }
 
@@ -35,7 +35,7 @@ resource "aws_subnet" "public" {
   map_public_ip_on_launch = true
 
   tags = {
-    Name                        = "boring-paper-public-${count.index + 1}-${random_string.suffix.result}"
+    Name                        = "boring-media-public-${count.index + 1}-${random_string.suffix.result}"
     "kubernetes.io/role/elb"    = "1"
     "kubernetes.io/cluster/${local.cluster_name}" = "owned"
   }
@@ -49,7 +49,7 @@ resource "aws_subnet" "private" {
   availability_zone = data.aws_availability_zones.available.names[count.index]
 
   tags = {
-    Name                              = "boring-paper-private-${count.index + 1}-${random_string.suffix.result}"
+    Name                              = "boring-media-private-${count.index + 1}-${random_string.suffix.result}"
     "kubernetes.io/role/internal-elb" = "1"
     "kubernetes.io/cluster/${local.cluster_name}" = "owned"
   }
@@ -61,7 +61,7 @@ resource "aws_eip" "nat" {
   domain = "vpc"
 
   tags = {
-    Name = "boring-paper-nat-eip-${count.index + 1}-${random_string.suffix.result}"
+    Name = "boring-media-nat-eip-${count.index + 1}-${random_string.suffix.result}"
   }
 
   depends_on = [aws_internet_gateway.main]
@@ -73,7 +73,7 @@ resource "aws_nat_gateway" "main" {
   subnet_id     = aws_subnet.public[count.index].id
 
   tags = {
-    Name = "boring-paper-nat-${count.index + 1}-${random_string.suffix.result}"
+    Name = "boring-media-nat-${count.index + 1}-${random_string.suffix.result}"
   }
 
   depends_on = [aws_internet_gateway.main]
@@ -89,7 +89,7 @@ resource "aws_route_table" "public" {
   }
 
   tags = {
-    Name = "boring-paper-public-rt-${random_string.suffix.result}"
+    Name = "boring-media-public-rt-${random_string.suffix.result}"
   }
 }
 
@@ -103,7 +103,7 @@ resource "aws_route_table" "private" {
   }
 
   tags = {
-    Name = "boring-paper-private-rt-${count.index + 1}-${random_string.suffix.result}"
+    Name = "boring-media-private-rt-${count.index + 1}-${random_string.suffix.result}"
   }
 }
 
@@ -122,7 +122,7 @@ resource "aws_route_table_association" "private" {
 
 # EKS Cluster IAM Role
 resource "aws_iam_role" "eks_cluster" {
-  name = "boring-paper-eks-cluster-${random_string.suffix.result}"
+  name = "boring-media-eks-cluster-${random_string.suffix.result}"
 
   assume_role_policy = jsonencode({
     Statement = [{
@@ -143,7 +143,7 @@ resource "aws_iam_role_policy_attachment" "eks_cluster_policy" {
 
 # EKS Node Group IAM Role
 resource "aws_iam_role" "eks_node_group" {
-  name = "boring-paper-eks-node-group-${random_string.suffix.result}"
+  name = "boring-media-eks-node-group-${random_string.suffix.result}"
 
   assume_role_policy = jsonencode({
     Statement = [{
@@ -187,14 +187,14 @@ resource "aws_eks_cluster" "main" {
   ]
 
   tags = {
-    Name = "boring-paper-cluster-${random_string.suffix.result}"
+    Name = "boring-media-cluster-${random_string.suffix.result}"
   }
 }
 
 # EKS Node Group
 resource "aws_eks_node_group" "main" {
   cluster_name    = aws_eks_cluster.main.name
-  node_group_name = "boring-paper-nodes"
+  node_group_name = "boring-media-nodes"
   node_role_arn   = aws_iam_role.eks_node_group.arn
   subnet_ids      = aws_subnet.private[*].id
   instance_types  = [var.node_instance_type]
@@ -219,7 +219,7 @@ resource "aws_eks_node_group" "main" {
 # ECR Repositories
 resource "aws_ecr_repository" "repositories" {
   for_each = toset(var.ecr_repositories)
-  name     = "boringpaperco/${each.key}"
+  name     = "boringmediaco/${each.key}"
 
   image_tag_mutability = "MUTABLE"
 
@@ -228,7 +228,7 @@ resource "aws_ecr_repository" "repositories" {
   }
 
   tags = {
-    Name = "boringpaperco-${each.key}"
+    Name = "boringmediaco-${each.key}"
   }
 }
 
@@ -243,7 +243,7 @@ resource "aws_iam_openid_connect_provider" "cluster" {
   url             = aws_eks_cluster.main.identity[0].oidc[0].issuer
 
   tags = {
-    Name = "boring-paper-oidc-${random_string.suffix.result}"
+    Name = "boring-media-oidc-${random_string.suffix.result}"
   }
 }
 
@@ -498,5 +498,5 @@ data "aws_availability_zones" "available" {
 
 # Local values
 locals {
-  cluster_name = "boring-paper-cluster-${random_string.suffix.result}"
+  cluster_name = "boring-media-cluster-${random_string.suffix.result}"
 } 

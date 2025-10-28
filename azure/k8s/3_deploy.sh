@@ -41,6 +41,11 @@ kubectl apply -f configmap.yaml
 kubectl apply -f secret.yaml
 kubectl apply -f pvc.yaml
 
+# Deploy MongoDB first (needed by SDK)
+echo "🗄️  Deploying MongoDB..."
+kubectl apply -f mongodb-deployment.yaml
+sleep 5  # Give MongoDB a moment to start
+
 # Deploy services
 kubectl apply -f ollama-deployment.yaml
 kubectl apply -f sdk-deployment.yaml
@@ -54,13 +59,13 @@ kubectl apply -f ingress.yaml
 echo "✅ Deployment complete!"
 echo ""
 echo "📊 Checking deployment status..."
-kubectl get pods -n boring-paper-co
+kubectl get pods -n boring-media-co
 echo ""
 echo "🌐 Services:"
-kubectl get services -n boring-paper-co
+kubectl get services -n boring-media-co
 echo ""
 echo "🔗 Ingress:"
-kubectl get ingress -n boring-paper-co
+kubectl get ingress -n boring-media-co
 
 echo ""
 echo "🌟 Deployment Complete!"

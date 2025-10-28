@@ -1,4 +1,4 @@
-# Boring Paper Co - Azure AKS Deployment
+# Boring Media Co - Azure AKS Deployment
 
 Deployment guide for Azure AKS.
 
@@ -89,20 +89,20 @@ This automatically:
 ### Check Status
 ```bash
 # Pod status
-kubectl get pods -n boring-paper-co
+kubectl get pods -n boring-media-co
 
 # Service status
-kubectl get services -n boring-paper-co
+kubectl get services -n boring-media-co
 
 # Ingress status
-kubectl get ingress -n boring-paper-co
+kubectl get ingress -n boring-media-co
 ```
 
 ### View Logs
 ```bash
 # Service logs
-kubectl logs -f deployment/sdk -n boring-paper-co
-kubectl logs -f deployment/aichat -n boring-paper-co
+kubectl logs -f deployment/sdk -n boring-media-co
+kubectl logs -f deployment/aichat -n boring-media-co
 
 # Ingress logs
 kubectl logs -f deployment/ingress-nginx-controller -n ingress-nginx
@@ -121,7 +121,7 @@ echo "http://boring-paper-azure.eastus.cloudapp.azure.com/"
 
 ### Remove Application
 ```bash
-kubectl delete namespace boring-paper-co
+kubectl delete namespace boring-media-co
 ```
 
 ### Remove Infrastructure

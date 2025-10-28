@@ -23,14 +23,14 @@ resource "google_project_service" "compute" {
 
 # VPC Network
 resource "google_compute_network" "vpc" {
-  name                    = "boring-paper-vpc-${random_string.suffix.result}"
+  name                    = "boring-media-vpc-${random_string.suffix.result}"
   auto_create_subnetworks = false
   depends_on             = [google_project_service.compute]
 }
 
 # Subnet
 resource "google_compute_subnetwork" "subnet" {
-  name          = "boring-paper-subnet-${random_string.suffix.result}"
+  name          = "boring-media-subnet-${random_string.suffix.result}"
   ip_cidr_range = "10.0.0.0/16"
   region        = var.region
   network       = google_compute_network.vpc.id
@@ -110,10 +110,10 @@ resource "google_container_node_pool" "primary_nodes" {
 
     labels = {
       environment = "production"
-      project     = "boring-paper-co"
+      project     = "boring-media-co"
     }
 
-    tags = ["gke-node", "boring-paper-co"]
+    tags = ["gke-node", "boring-media-co"]
   }
 
   management {
@@ -152,7 +152,7 @@ resource "google_artifact_registry_repository" "docker_repo" {
   for_each = toset(var.artifact_registry_repositories)
 
   location      = var.region
-  repository_id = "boringpaperco-${each.value}"
+  repository_id = "boringmediaco-${each.value}"
   description   = "Docker repository for ${each.value} service"
   format        = "DOCKER"
 

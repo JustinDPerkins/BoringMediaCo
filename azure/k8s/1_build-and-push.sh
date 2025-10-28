@@ -31,14 +31,14 @@ for service in "${services[@]}"; do
             --build-arg VITE_AICHAT_URL="/api/chat" \
             --build-arg VITE_OLLAMA_URL="/api/ollama" \
             --build-arg VITE_XDR_WS_URL="/api/xdr/terminal" \
-            -t $ACR_SERVER/boringpaperco/$service:latest ../../$service
+            -t $ACR_SERVER/boringmediaco/$service:latest ../../$service
     else
         # Build other services normally
-        docker build --platform linux/amd64 -t $ACR_SERVER/boringpaperco/$service:latest ../../$service
+        docker build --platform linux/amd64 -t $ACR_SERVER/boringmediaco/$service:latest ../../$service
     fi
     
     echo "📤 Pushing $service..."
-    docker push $ACR_SERVER/boringpaperco/$service:latest
+    docker push $ACR_SERVER/boringmediaco/$service:latest
     
     echo "✅ $service complete!"
 done
@@ -48,7 +48,7 @@ echo "🎉 All images built and pushed to Terraform-created ACR!"
 echo ""
 echo "📝 Images pushed to:"
 for service in "${services[@]}"; do
-    echo "  ✅ $service: $ACR_SERVER/boringpaperco/$service:latest"
+    echo "  ✅ $service: $ACR_SERVER/boringmediaco/$service:latest"
 done
 echo ""
 echo "🚀 Next steps:"

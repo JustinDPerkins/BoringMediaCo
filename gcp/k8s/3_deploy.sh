@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# Boring Paper Co - GKE Deployment Script
+# Boring Media Co - GKE Deployment Script
 
 set -e
 
-echo "🚀 Deploying Boring Paper Co to GKE..."
+echo "🚀 Deploying Boring Media Co to GKE..."
 
 # Check if kubectl is connected to a cluster
 if ! kubectl cluster-info > /dev/null 2>&1; then
@@ -36,6 +36,11 @@ kubectl apply -f namespace.yaml
 kubectl apply -f secret.yaml
 kubectl apply -f pvc.yaml
 
+# Deploy MongoDB first (needed by SDK)
+echo "🗄️  Deploying MongoDB..."
+kubectl apply -f mongodb-deployment.yaml
+sleep 5  # Give MongoDB a moment to start
+
 # Deploy ingress first to get load balancer IP
 kubectl apply -f ingress.yaml
 
@@ -64,7 +69,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: app-config
-  namespace: boring-paper-co
+  namespace: boring-media-co
 data:
   ENVIRONMENT: "production"
   REGION: "us-central1"
@@ -78,7 +83,7 @@ data:
   VITE_AICHAT_URL: "/api/chat"
   VITE_XDR_WS_URL: "/api/xdr/terminal"
   # Multi-cloud CORS support - GCP patterns
-  ALLOWED_ORIGINS: "http://boringpapercompany.com,http://azure.boringpapercompany.com,http://gcp.boringpapercompany.com"
+  ALLOWED_ORIGINS: "http://boringmediacompany.com,http://azure.boringmediacompany.com,http://gcp.boringmediacompany.com"
   # GCP Load Balancer IP for precise CORS (dynamically set)
   LOAD_BALANCER_IP: "$LOAD_BALANCER_IP"
 EOF
@@ -96,30 +101,30 @@ kubectl apply -f ui-deployment.yaml
 # Update configmap with actual load balancer IP and restart deployments
 if [ -n "$LOAD_BALANCER_IP" ]; then
     echo "🔄 Updating configmap with load balancer IP: $LOAD_BALANCER_IP"
-    kubectl patch configmap app-config -n boring-paper-co --patch="{\"data\":{\"LOAD_BALANCER_IP\":\"$LOAD_BALANCER_IP\"}}"
+    kubectl patch configmap app-config -n boring-media-co --patch="{\"data\":{\"LOAD_BALANCER_IP\":\"$LOAD_BALANCER_IP\"}}"
     
     echo "🔄 Restarting deployments to pick up new configmap..."
-    kubectl rollout restart deployment/containerxdr -n boring-paper-co
-    kubectl rollout restart deployment/aichat -n boring-paper-co
-    kubectl rollout restart deployment/sdk -n boring-paper-co
+    kubectl rollout restart deployment/containerxdr -n boring-media-co
+    kubectl rollout restart deployment/aichat -n boring-media-co
+    kubectl rollout restart deployment/sdk -n boring-media-co
     
     echo "⏳ Waiting for deployments to complete..."
-    kubectl rollout status deployment/containerxdr -n boring-paper-co
-    kubectl rollout status deployment/aichat -n boring-paper-co
-    kubectl rollout status deployment/sdk -n boring-paper-co
+    kubectl rollout status deployment/containerxdr -n boring-media-co
+    kubectl rollout status deployment/aichat -n boring-media-co
+    kubectl rollout status deployment/sdk -n boring-media-co
 fi
 
 echo "✅ Deployment complete!"
 
 echo ""
 echo "📊 Checking deployment status..."
-kubectl get pods -n boring-paper-co
+kubectl get pods -n boring-media-co
 echo ""
 echo "🌐 Services:"
-kubectl get services -n boring-paper-co
+kubectl get services -n boring-media-co
 echo ""
 echo "🔗 Ingress:"
-kubectl get ingress -n boring-paper-co
+kubectl get ingress -n boring-media-co
 
 echo ""
 echo "🌟 Deployment Complete!"

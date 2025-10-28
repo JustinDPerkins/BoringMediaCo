@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: containerxdr
-  namespace: boring-paper-co
+  namespace: boring-media-co
   labels:
     cloud-provider: azure
 spec:
@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: containerxdr
-        image: boringpapercoumjjbd.azurecr.io/boringpaperco/containerxdr:latest
+        image: boringmediacoumjjbd.azurecr.io/boringmediaco/containerxdr:latest
         ports:
         - containerPort: 8081
         securityContext:
@@ -45,7 +45,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: containerxdr-service
-  namespace: boring-paper-co
+  namespace: boring-media-co
   labels:
     cloud-provider: azure
 spec:

@@ -7,7 +7,7 @@ resource "random_string" "suffix" {
 
 resource "azurerm_resource_group" "rg" {
   location = var.resource_group_location
-  name     = "${var.resource_group_name_prefix}-boring-paper-${random_string.suffix.result}"
+  name     = "${var.resource_group_name_prefix}-boring-media-${random_string.suffix.result}"
 }
 
 resource "random_string" "cluster_suffix" {
@@ -18,9 +18,9 @@ resource "random_string" "cluster_suffix" {
 
 resource "azurerm_kubernetes_cluster" "k8s" {
   location            = azurerm_resource_group.rg.location
-  name                = "boring-paper-cluster-${random_string.cluster_suffix.result}"
+  name                = "boring-media-cluster-${random_string.cluster_suffix.result}"
   resource_group_name = azurerm_resource_group.rg.name
-  dns_prefix          = "boring-paper-dns-${random_string.cluster_suffix.result}"
+  dns_prefix          = "boring-media-dns-${random_string.cluster_suffix.result}"
 
   identity {
     type = "SystemAssigned"
@@ -46,7 +46,7 @@ resource "azurerm_kubernetes_cluster" "k8s" {
 
 # Azure Container Registry
 resource "azurerm_container_registry" "acr" {
-  name                = "boringpaperco${random_string.suffix.result}"
+  name                = "boringmediaco${random_string.suffix.result}"
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
   sku                 = "Basic"
@@ -54,7 +54,7 @@ resource "azurerm_container_registry" "acr" {
 
   tags = {
     Environment = var.environment
-    Project     = "BoringPaperCo"
+    Project     = "boring mediaCo"
     ManagedBy   = "Terraform"
   }
 }

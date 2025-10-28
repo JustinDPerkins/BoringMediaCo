@@ -1,8 +1,8 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: boring-paper-co
+  name: boring-media-co
   labels:
-    name: boring-paper-co
+    name: boring-media-co
     environment: production
     cloud: gcp 

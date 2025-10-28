@@ -21,7 +21,7 @@ for service in "${services[@]}"; do
         echo "🔧 Updating $deployment_file..."
         
         # Replace placeholder project-id and registry URL with actual Terraform values
-        # Pattern: us-central1-docker.pkg.dev/project-id/boringpaperco-SERVICE/boringpaperco/SERVICE:latest
+        # Pattern: us-central1-docker.pkg.dev/project-id/boringmediaco-SERVICE/boringmediaco/SERVICE:latest
         # Use sed compatible with both macOS and Linux
         if [[ "$OSTYPE" == "darwin"* ]]; then
             # macOS
@@ -40,7 +40,7 @@ echo "🎉 All deployment files updated to use: $REGISTRY_BASE_URL"
 echo ""
 echo "📝 Image references now point to:"
 for service in "${services[@]}"; do
-    echo "  ✅ $service: $REGISTRY_BASE_URL/boringpaperco-$service/boringpaperco/$service:latest"
+    echo "  ✅ $service: $REGISTRY_BASE_URL/boringmediaco-$service/boringmediaco/$service:latest"
 done
 
 echo ""
