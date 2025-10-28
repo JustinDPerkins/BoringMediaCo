@@ -34,7 +34,32 @@ interface Video {
   category: string;
   description: string;
   uploadDate: string;
+  comments?: Comment[];
 }
+
+interface Comment {
+  id: string;
+  author: string;
+  authorUsername: string;
+  authorAvatar: string;
+  text: string;
+  timestamp: Date | string;
+  likes: number;
+}
+
+const formatTimestamp = (timestamp: Date | string): string => {
+  const date = new Date(timestamp);
+  const now = new Date();
+  const diffInMs = now.getTime() - date.getTime();
+  const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+  
+  if (diffInDays === 0) return 'Today';
+  if (diffInDays === 1) return 'Yesterday';
+  if (diffInDays < 7) return `${diffInDays} days ago`;
+  if (diffInDays < 30) return `${Math.floor(diffInDays / 7)} weeks ago`;
+  if (diffInDays < 365) return `${Math.floor(diffInDays / 30)} months ago`;
+  return `${Math.floor(diffInDays / 365)} years ago`;
+};
 
 const allVideos: Video[] = [
   {
@@ -49,6 +74,26 @@ const allVideos: Video[] = [
     category: 'Security',
     description: 'Learn how to prioritize security threats effectively. This video covers essential techniques for identifying and addressing the most critical security issues in your organization.',
     uploadDate: '3 days ago',
+    comments: [
+      {
+        id: 'c1',
+        author: 'Sarah Chen',
+        authorUsername: 'cybersafetyexpert',
+        authorAvatar: 'https://via.placeholder.com/40/4CAF50/FFFFFF?text=SC',
+        text: 'Great overview! I use similar prioritization frameworks in my security assessments.',
+        timestamp: new Date('2024-01-16'),
+        likes: 23
+      },
+      {
+        id: 'c2',
+        author: 'Marcus Thompson',
+        authorUsername: 'devopsguru',
+        authorAvatar: 'https://via.placeholder.com/40/FF9800/FFFFFF?text=MT',
+        text: 'This aligns perfectly with the OWASP Top 10. Excellent explanation!',
+        timestamp: new Date('2024-01-17'),
+        likes: 15
+      }
+    ]
   },
   {
     id: '2',
@@ -62,6 +107,26 @@ const allVideos: Video[] = [
     category: 'Security',
     description: 'Comprehensive guide to mitigating security risks. Explore best practices and proven strategies for reducing vulnerabilities in your systems.',
     uploadDate: '1 week ago',
+    comments: [
+      {
+        id: 'c3',
+        author: 'Alex Rivera',
+        authorUsername: 'cloudarchitect',
+        authorAvatar: 'https://via.placeholder.com/40/2196F3/FFFFFF?text=AR',
+        text: 'Great strategies! Have you tried implementing any of these in AWS/Azure environments?',
+        timestamp: new Date('2024-01-09'),
+        likes: 12
+      },
+      {
+        id: 'c4',
+        author: 'Emily Wang',
+        authorUsername: 'securityresearcher',
+        authorAvatar: 'https://via.placeholder.com/40/9C27B0/FFFFFF?text=EW',
+        text: 'The threat modeling approach here is spot on. Thanks for sharing!',
+        timestamp: new Date('2024-01-10'),
+        likes: 19
+      }
+    ]
   },
   {
     id: '3',
@@ -75,6 +140,26 @@ const allVideos: Video[] = [
     category: 'Security',
     description: 'Visualizing security risks effectively. Learn how to create compelling dashboards and reports that make complex security data easy to understand.',
     uploadDate: '2 weeks ago',
+    comments: [
+      {
+        id: 'c5',
+        author: 'DataDefender',
+        authorUsername: 'datadefender',
+        authorAvatar: 'https://via.placeholder.com/40/2196F3/FFFFFF?text=DD',
+        text: 'The visualization tools are impressive! Which library did you use for the charts?',
+        timestamp: new Date('2024-01-05'),
+        likes: 12
+      },
+      {
+        id: 'c6',
+        author: 'Marcus Thompson',
+        authorUsername: 'devopsguru',
+        authorAvatar: 'https://via.placeholder.com/40/FF9800/FFFFFF?text=MT',
+        text: 'I implemented something similar in Grafana. This approach is way better!',
+        timestamp: new Date('2024-01-06'),
+        likes: 8
+      }
+    ]
   },
   {
     id: '4',
@@ -88,6 +173,26 @@ const allVideos: Video[] = [
     category: 'Security',
     description: 'Being proactive in security management. Discover how to stay ahead of threats and implement preventative measures before issues arise.',
     uploadDate: '3 weeks ago',
+    comments: [
+      {
+        id: 'c7',
+        author: 'ResilientSec',
+        authorUsername: 'resilientsec',
+        authorAvatar: 'https://via.placeholder.com/40/FF4081/FFFFFF?text=RS',
+        text: 'Crucial information for modern security teams. Planning to implement this architecture!',
+        timestamp: new Date('2024-01-01'),
+        likes: 8
+      },
+      {
+        id: 'c8',
+        author: 'James Mitchell',
+        authorUsername: 'pentesterpro',
+        authorAvatar: 'https://via.placeholder.com/40/E91E63/FFFFFF?text=JM',
+        text: 'The proactive defense model you outlined is exactly what I advise clients. Well explained!',
+        timestamp: new Date('2024-01-02'),
+        likes: 14
+      }
+    ]
   },
 ];
 
@@ -250,7 +355,7 @@ const Watch: React.FC = () => {
 
             {/* Comments Section */}
             <Typography variant="h6" sx={{ color: '#f5f1e8', mb: 2 }}>
-              12 Comments
+              {video.comments?.length || 0} Comments
             </Typography>
 
             <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
@@ -270,31 +375,43 @@ const Watch: React.FC = () => {
               />
             </Box>
 
-            {/* Sample Comments */}
+            {/* Comments from MongoDB */}
             <Stack spacing={2}>
-              {[1, 2, 3].map((i) => (
-                <Box key={i} sx={{ display: 'flex', gap: 2 }}>
-                  <Avatar sx={{ width: 40, height: 40 }}>
-                    {String.fromCharCode(65 + i)}
-                  </Avatar>
-                  <Box sx={{ flex: 1 }}>
-                    <Typography variant="subtitle2" sx={{ color: '#f5f1e8' }}>
-                      User {i} • {i === 1 ? '2 hours ago' : i === 2 ? '5 hours ago' : '1 day ago'}
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: 'rgba(245, 241, 232, 0.8)', mt: 0.5 }}>
-                      Great video! Very informative and well explained.
-                    </Typography>
-                    <Box sx={{ display: 'flex', gap: 2, mt: 1 }}>
-                      <IconButton size="small">
-                        <ThumbUpIcon sx={{ fontSize: 16 }} />
-                      </IconButton>
-                      <IconButton size="small">
-                        <ReplyIcon sx={{ fontSize: 16 }} />
-                      </IconButton>
+              {video.comments && video.comments.length > 0 ? (
+                video.comments.map((comment: any, index: number) => (
+                  <Box key={comment.id || index} sx={{ display: 'flex', gap: 2 }}>
+                    <Avatar 
+                      src={comment.authorAvatar} 
+                      sx={{ width: 40, height: 40 }}
+                    >
+                      {comment.author[0]}
+                    </Avatar>
+                    <Box sx={{ flex: 1 }}>
+                      <Typography variant="subtitle2" sx={{ color: '#f5f1e8' }}>
+                        {comment.author} • {formatTimestamp(comment.timestamp)}
+                      </Typography>
+                      <Typography variant="body2" sx={{ color: 'rgba(245, 241, 232, 0.8)', mt: 0.5 }}>
+                        {comment.text}
+                      </Typography>
+                      <Box sx={{ display: 'flex', gap: 2, mt: 1 }}>
+                        <IconButton size="small" sx={{ color: 'rgba(255,255,255,0.6)' }}>
+                          <ThumbUpIcon sx={{ fontSize: 16 }} />
+                        </IconButton>
+                        <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.6)' }}>
+                          {comment.likes || 0}
+                        </Typography>
+                        <IconButton size="small" sx={{ color: 'rgba(255,255,255,0.6)' }}>
+                          <ReplyIcon sx={{ fontSize: 16 }} />
+                        </IconButton>
+                      </Box>
                     </Box>
                   </Box>
-                </Box>
-              ))}
+                ))
+              ) : (
+                <Typography variant="body2" sx={{ color: 'rgba(245, 241, 232, 0.6)', textAlign: 'center', py: 4 }}>
+                  No comments yet. Be the first to comment!
+                </Typography>
+              )}
             </Stack>
           </Box>
 

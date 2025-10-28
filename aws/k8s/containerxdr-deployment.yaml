@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: containerxdr
-        image: 975050242527.dkr.ecr.us-west-2.amazonaws.com/boringmediaco/containerxdr:latest
+        image: 153598086241.dkr.ecr.us-west-2.amazonaws.com/boringmediaco/containerxdr:latest
         ports:
         - containerPort: 8081
         envFrom:

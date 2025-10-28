@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# Boring Paper Co - EKS Deployment Script
+# Boring Media Co - EKS Deployment Script
 # Uses NGINX Ingress instead of AWS Load Balancer Controller for simplicity
 
 set -e
 
-echo "🚀 Deploying Boring Paper Co to EKS (Simple Mode)..."
+echo "🚀 Deploying Boring Media Co to EKS (Simple Mode)..."
 
 # Prompt for AWS region
 echo "🌍 Please enter your AWS region:"
@@ -95,14 +95,16 @@ kubectl wait --namespace ingress-nginx \
 
 # Check EBS CSI Driver status (now managed by CloudFormation)
 echo "📦 Checking EBS CSI Driver status..."
-if kubectl get pods -n kube-system -l app=ebs-csi-controller --no-headers | grep -q Running; then
+if kubectl get pods -n kube-system -l app=ebs-csi-controller --no-headers 2>/dev/null | grep -q Running; then
     echo "✅ EBS CSI Driver is running"
-else
+elif kubectl get pods -n kube-system -l app=ebs-csi-controller --no-headers 2>/dev/null | grep -q Pending; then
     echo "⏳ Waiting for EBS CSI Driver to be ready..."
     kubectl wait --namespace kube-system \
         --for=condition=ready pod \
         --selector=app=ebs-csi-controller \
-        --timeout=300s
+        --timeout=300s 2>/dev/null || echo "⚠️  EBS CSI Driver not found or not ready"
+else
+    echo "⚠️  EBS CSI Driver not found. This might be OK if storage is not needed yet."
 fi
 
 # Get the EBS CSI Driver role ARN from CloudFormation output

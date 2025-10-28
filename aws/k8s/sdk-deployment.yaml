@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: sdk
-        image: 975050242527.dkr.ecr.us-west-2.amazonaws.com/boringmediaco/sdk:latest
+        image: 153598086241.dkr.ecr.us-west-2.amazonaws.com/boringmediaco/sdk:latest
         ports:
         - containerPort: 5000
         env:

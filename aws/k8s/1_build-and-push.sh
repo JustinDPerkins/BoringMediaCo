@@ -31,7 +31,7 @@ for service in "${services[@]}"; do
     echo "🚀 Starting $service build and push in background..."
     
     # Create repository if it doesn't exist
-    aws ecr create-repository --repository-name boringpaperco/$service --region $REGION 2>/dev/null || true
+    aws ecr create-repository --repository-name boringmediaco/$service --region $REGION 2>/dev/null || true
     
     # Start build and push in background
     (
@@ -44,14 +44,14 @@ for service in "${services[@]}"; do
                 --build-arg VITE_AICHAT_URL="/api/chat" \
                 --build-arg VITE_OLLAMA_URL="/api/ollama" \
                 --build-arg VITE_XDR_WS_URL="/api/xdr/terminal" \
-                -t $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/boringpaperco/$service:latest ../../$service
+                -t $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/boringmediaco/$service:latest ../../$service
         else
             # Build other services normally
-            docker build --platform linux/amd64 -t $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/boringpaperco/$service:latest ../../$service
+            docker build --platform linux/amd64 -t $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/boringmediaco/$service:latest ../../$service
         fi
         
         echo "📤 Pushing $service..."
-        docker push $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/boringpaperco/$service:latest
+        docker push $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/boringmediaco/$service:latest
         
         echo "✅ $service complete!"
     ) &
@@ -68,7 +68,7 @@ echo "🎉 All images built and pushed concurrently!"
 echo ""
 echo "📝 Next step: Update image references in your deployment files:"
 for service in "${services[@]}"; do
-    echo "  $service: $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/boringpaperco/$service:latest"
+    echo "  $service: $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/boringmediaco/$service:latest"
 done
 
 echo ""

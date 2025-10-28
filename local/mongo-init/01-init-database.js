@@ -39,10 +39,74 @@ db.users.insertMany([
   }
 ]);
 
-print('✅ Inserted 2 users');
+// Insert more fake users
+db.users.insertMany([
+  {
+    username: 'cybersafetyexpert',
+    name: 'Sarah Chen',
+    email: 'sarah@boringmedia.co',
+    avatar: 'https://via.placeholder.com/40/4CAF50/FFFFFF?text=SC',
+    bio: 'Cybersecurity specialist and ethical hacker. Sharing knowledge to make the internet safer.',
+    subscribers: 8520,
+    totalVideos: 1,
+    totalViews: 2100,
+    joinDate: new Date('2023-03-10'),
+    subscriptions: []
+  },
+  {
+    username: 'devopsguru',
+    name: 'Marcus Thompson',
+    email: 'marcus@boringmedia.co',
+    avatar: 'https://via.placeholder.com/40/FF9800/FFFFFF?text=MT',
+    bio: 'DevOps engineer with 10 years of cloud experience. Love automating everything!',
+    subscribers: 12800,
+    totalVideos: 1,
+    totalViews: 3400,
+    joinDate: new Date('2022-11-05'),
+    subscriptions: []
+  },
+  {
+    username: 'cloudarchitect',
+    name: 'Alex Rivera',
+    email: 'alex@boringmedia.co',
+    avatar: 'https://via.placeholder.com/40/2196F3/FFFFFF?text=AR',
+    bio: 'Multi-cloud architect. AWS, Azure, GCP certified. Building scalable systems.',
+    subscribers: 9800,
+    totalVideos: 1,
+    totalViews: 2800,
+    joinDate: new Date('2023-01-20'),
+    subscriptions: []
+  },
+  {
+    username: 'securityresearcher',
+    name: 'Dr. Emily Wang',
+    email: 'emily@boringmedia.co',
+    avatar: 'https://via.placeholder.com/40/9C27B0/FFFFFF?text=EW',
+    bio: 'Security researcher and academic. Breaking things to make them better.',
+    subscribers: 15600,
+    totalVideos: 1,
+    totalViews: 4200,
+    joinDate: new Date('2022-08-15'),
+    subscriptions: []
+  },
+  {
+    username: 'pentesterpro',
+    name: 'James Mitchell',
+    email: 'james@boringmedia.co',
+    avatar: 'https://via.placeholder.com/40/E91E63/FFFFFF?text=JM',
+    bio: 'Professional penetration tester. Finding vulnerabilities before the bad guys do.',
+    subscribers: 7200,
+    totalVideos: 1,
+    totalViews: 1800,
+    joinDate: new Date('2023-05-01'),
+    subscriptions: []
+  }
+]);
 
-// Insert initial videos
-db.videos.insertMany([
+print('✅ Inserted users (Tomonthy, Jason, Sarah, Marcus, Alex, Emily, James)');
+
+// Insert additional videos from more creators
+var videosData = [
   {
     title: 'Prioritize',
     description: 'Prioritize: Understanding and Mitigating Cyber Risks. Learn how to effectively prioritize and mitigate cyber risks in your organization.',
@@ -61,7 +125,35 @@ db.videos.insertMany([
     dislikes: 5,
     uploadDate: new Date('2024-01-15'),
     tags: ['security', 'risk', 'prioritize'],
-    comments: []
+    comments: [
+      {
+        id: 'comment_1',
+        author: 'Sarah Chen',
+        authorUsername: 'cybersafetyexpert',
+        authorAvatar: 'https://via.placeholder.com/40/4CAF50/FFFFFF?text=SC',
+        text: 'Great overview! I use similar prioritization frameworks in my security assessments.',
+        timestamp: new Date('2024-01-16'),
+        likes: 23
+      },
+      {
+        id: 'comment_2',
+        author: 'Marcus Thompson',
+        authorUsername: 'devopsguru',
+        authorAvatar: 'https://via.placeholder.com/40/FF9800/FFFFFF?text=MT',
+        text: 'This aligns perfectly with the OWASP Top 10. Excellent explanation!',
+        timestamp: new Date('2024-01-17'),
+        likes: 15
+      },
+      {
+        id: 'comment_3',
+        author: 'DataDefender',
+        authorUsername: 'datadefender',
+        authorAvatar: 'https://via.placeholder.com/40/2196F3/FFFFFF?text=DD',
+        text: 'Could you do a follow-up on implementing this in CI/CD pipelines?',
+        timestamp: new Date('2024-01-18'),
+        likes: 8
+      }
+    ]
   },
   {
     title: 'Mitigate',
@@ -81,7 +173,26 @@ db.videos.insertMany([
     dislikes: 2,
     uploadDate: new Date('2024-01-08'),
     tags: ['security', 'threat', 'mitigation'],
-    comments: []
+    comments: [
+      {
+        id: 'comment_4',
+        author: 'Alex Rivera',
+        authorUsername: 'cloudarchitect',
+        authorAvatar: 'https://via.placeholder.com/40/2196F3/FFFFFF?text=AR',
+        text: 'Great strategies! Have you tried implementing any of these in AWS/Azure environments?',
+        timestamp: new Date('2024-01-09'),
+        likes: 12
+      },
+      {
+        id: 'comment_5',
+        author: 'Emily Wang',
+        authorUsername: 'securityresearcher',
+        authorAvatar: 'https://via.placeholder.com/40/9C27B0/FFFFFF?text=EW',
+        text: 'The threat modeling approach here is spot on. Thanks for sharing!',
+        timestamp: new Date('2024-01-10'),
+        likes: 19
+      }
+    ]
   },
   {
     title: 'Risk Visualize',
@@ -100,18 +211,37 @@ db.videos.insertMany([
     likes: 134,
     dislikes: 1,
     uploadDate: new Date('2024-01-01'),
-    tags: ['security', 'analytics', 'visualization'],
-    comments: [
-      {
-        id: 'comment_' + new Date().getTime(),
-        author: 'DataDefender',
-        authorAvatar: 'https://via.placeholder.com/40/2196F3/FFFFFF?text=DD',
-        text: 'The visualization tools are impressive!',
-        timestamp: new Date('2024-01-05'),
-        likes: 12
-      }
-    ]
-  },
+        tags: ['security', 'analytics', 'visualization'],
+        comments: [
+          {
+            id: 'comment_6',
+            author: 'DataDefender',
+            authorUsername: 'datadefender',
+            authorAvatar: 'https://via.placeholder.com/40/2196F3/FFFFFF?text=DD',
+            text: 'The visualization tools are impressive! Which library did you use for the charts?',
+            timestamp: new Date('2024-01-05'),
+            likes: 12
+          },
+          {
+            id: 'comment_7',
+            author: 'Marcus Thompson',
+            authorUsername: 'devopsguru',
+            authorAvatar: 'https://via.placeholder.com/40/FF9800/FFFFFF?text=MT',
+            text: 'I implemented something similar in Grafana. This approach is way better!',
+            timestamp: new Date('2024-01-06'),
+            likes: 8
+          },
+          {
+            id: 'comment_8',
+            author: 'Sarah Chen',
+            authorUsername: 'cybersafetyexpert',
+            authorAvatar: 'https://via.placeholder.com/40/4CAF50/FFFFFF?text=SC',
+            text: 'What data sources are you connecting to? Real-time or batch processing?',
+            timestamp: new Date('2024-01-07'),
+            likes: 6
+          }
+        ]
+      },
   {
     title: 'Proactive',
     description: 'Proactive: Building a Resilient Security Architecture. Learn how to build proactive security systems.',
@@ -129,21 +259,265 @@ db.videos.insertMany([
     likes: 156,
     dislikes: 3,
     uploadDate: new Date('2023-12-20'),
-    tags: ['security', 'architecture', 'proactive'],
+        tags: ['security', 'architecture', 'proactive'],
+        comments: [
+          {
+            id: 'comment_9',
+            author: 'ResilientSec',
+            authorUsername: 'resilientsec',
+            authorAvatar: 'https://via.placeholder.com/40/FF4081/FFFFFF?text=RS',
+            text: 'Crucial information for modern security teams. Planning to implement this architecture!',
+            timestamp: new Date('2024-01-01'),
+            likes: 8
+          },
+          {
+            id: 'comment_10',
+            author: 'James Mitchell',
+            authorUsername: 'pentesterpro',
+            authorAvatar: 'https://via.placeholder.com/40/E91E63/FFFFFF?text=JM',
+            text: 'The proactive defense model you outlined is exactly what I advise clients. Well explained!',
+            timestamp: new Date('2024-01-02'),
+            likes: 14
+          },
+          {
+            id: 'comment_11',
+            author: 'Alex Rivera',
+            authorUsername: 'cloudarchitect',
+            authorAvatar: 'https://via.placeholder.com/40/2196F3/FFFFFF?text=AR',
+            text: 'How does this integrate with zero-trust principles? Would love a follow-up video.',
+            timestamp: new Date('2024-01-03'),
+            likes: 7
+          }
+        ]
+      },
+  // Add videos from other users
+  {
+    title: 'Zero Trust Architecture Explained',
+    description: 'Understanding Zero Trust principles and how to implement them in your organization.',
+    uploader: {
+      id: db.users.findOne({ username: 'cybersafetyexpert' })._id.toString(),
+      name: 'Sarah Chen',
+      username: 'cybersafetyexpert',
+      avatar: 'https://via.placeholder.com/40/4CAF50/FFFFFF?text=SC'
+    },
+    videoUrl: '/videos/Prioritize.mp4', // Placeholder
+    thumbnailUrl: '/videos/Prioritize.mp4',
+    duration: 425,
+    category: 'Security',
+    views: 5100,
+    likes: 320,
+    dislikes: 8,
+    uploadDate: new Date('2024-01-10'),
+    tags: ['zero-trust', 'security', 'architecture'],
     comments: [
       {
-        id: 'comment_' + (new Date().getTime() + 1),
-        author: 'ResilientSec',
-        authorAvatar: 'https://via.placeholder.com/40/FF4081/FFFFFF?text=RS',
-        text: 'Crucial information for modern security teams.',
-        timestamp: new Date('2024-01-01'),
-        likes: 8
+        id: 'comment_12',
+        author: 'Tomonthy Pond',
+        authorUsername: 'tomonthypond',
+        authorAvatar: '/images/bpclogo.png',
+        text: 'Excellent breakdown of zero trust! Been implementing this at our company.',
+        timestamp: new Date('2024-01-11'),
+        likes: 45
+      },
+      {
+        id: 'comment_13',
+        author: 'Marcus Thompson',
+        authorUsername: 'devopsguru',
+        authorAvatar: 'https://via.placeholder.com/40/FF9800/FFFFFF?text=MT',
+        text: 'How do you handle legacy systems that cant support this?',
+        timestamp: new Date('2024-01-12'),
+        likes: 28
+      }
+    ]
+  },
+  {
+    title: 'CI/CD Security Best Practices',
+    description: 'Securing your CI/CD pipelines to prevent vulnerabilities from making it to production.',
+    uploader: {
+      id: db.users.findOne({ username: 'devopsguru' })._id.toString(),
+      name: 'Marcus Thompson',
+      username: 'devopsguru',
+      avatar: 'https://via.placeholder.com/40/FF9800/FFFFFF?text=MT'
+    },
+    videoUrl: '/videos/Mitigate.mp4',
+    thumbnailUrl: '/videos/Mitigate.mp4',
+    duration: 560,
+    category: 'DevOps',
+    views: 8900,
+    likes: 520,
+    dislikes: 12,
+    uploadDate: new Date('2023-12-28'),
+    tags: ['cicd', 'devops', 'security'],
+    comments: [
+      {
+        id: 'comment_14',
+        author: 'Jason Perez',
+        authorUsername: 'jasonperez',
+        authorAvatar: 'https://via.placeholder.com/40/FF4081/FFFFFF?text=JP',
+        text: 'Great content! We use GitHub Actions - would love to see specific examples.',
+        timestamp: new Date('2023-12-29'),
+        likes: 34
+      },
+      {
+        id: 'comment_15',
+        author: 'Emily Wang',
+        authorUsername: 'securityresearcher',
+        authorAvatar: 'https://via.placeholder.com/40/9C27B0/FFFFFF?text=EW',
+        text: 'The secret scanning section was particularly helpful.',
+        timestamp: new Date('2023-12-30'),
+        likes: 22
+      },
+      {
+        id: 'comment_16',
+        author: 'Sarah Chen',
+        authorUsername: 'cybersafetyexpert',
+        authorAvatar: 'https://via.placeholder.com/40/4CAF50/FFFFFF?text=SC',
+        text: 'Do you recommend any specific tools for secret management?',
+        timestamp: new Date('2023-12-31'),
+        likes: 18
+      }
+    ]
+  },
+  {
+    title: 'Multi-Cloud Strategy Guide',
+    description: 'How to successfully implement a multi-cloud architecture across AWS, Azure, and GCP.',
+    uploader: {
+      id: db.users.findOne({ username: 'cloudarchitect' })._id.toString(),
+      name: 'Alex Rivera',
+      username: 'cloudarchitect',
+      avatar: 'https://via.placeholder.com/40/2196F3/FFFFFF?text=AR'
+    },
+    videoUrl: '/videos/RiskVisualize.mp4',
+    thumbnailUrl: '/videos/RiskVisualize.mp4',
+    duration: 680,
+    category: 'Cloud',
+    views: 12400,
+    likes: 890,
+    dislikes: 15,
+    uploadDate: new Date('2023-11-15'),
+    tags: ['multi-cloud', 'aws', 'azure', 'gcp'],
+    comments: [
+      {
+        id: 'comment_17',
+        author: 'Tomonthy Pond',
+        authorUsername: 'tomonthypond',
+        authorAvatar: '/images/bpclogo.png',
+        text: 'This is exactly what we implemented! Great roadmap.',
+        timestamp: new Date('2023-11-16'),
+        likes: 56
+      },
+      {
+        id: 'comment_18',
+        author: 'Marcus Thompson',
+        authorUsername: 'devopsguru',
+        authorAvatar: 'https://via.placeholder.com/40/FF9800/FFFFFF?text=MT',
+        text: 'Cost optimization tips here are gold. Saved us thousands.',
+        timestamp: new Date('2023-11-17'),
+        likes: 42
+      },
+      {
+        id: 'comment_19',
+        author: 'James Mitchell',
+        authorUsername: 'pentesterpro',
+        authorAvatar: 'https://via.placeholder.com/40/E91E63/FFFFFF?text=JM',
+        text: 'Security considerations for cross-cloud communication?',
+        timestamp: new Date('2023-11-18'),
+        likes: 29
+      }
+    ]
+  },
+  {
+    title: 'Penetration Testing Fundamentals',
+    description: 'Introduction to ethical hacking and penetration testing methodologies.',
+    uploader: {
+      id: db.users.findOne({ username: 'pentesterpro' })._id.toString(),
+      name: 'James Mitchell',
+      username: 'pentesterpro',
+      avatar: 'https://via.placeholder.com/40/E91E63/FFFFFF?text=JM'
+    },
+    videoUrl: '/videos/Proactive.mp4',
+    thumbnailUrl: '/videos/Proactive.mp4',
+    duration: 720,
+    category: 'Security',
+    views: 15200,
+    likes: 1200,
+    dislikes: 20,
+    uploadDate: new Date('2023-10-10'),
+    tags: ['penetration-testing', 'ethical-hacking', 'security'],
+    comments: [
+      {
+        id: 'comment_20',
+        author: 'Emily Wang',
+        authorUsername: 'securityresearcher',
+        authorAvatar: 'https://via.placeholder.com/40/9C27B0/FFFFFF?text=EW',
+        text: 'Excellent intro! Which certifications would you recommend for beginners?',
+        timestamp: new Date('2023-10-11'),
+        likes: 78
+      },
+      {
+        id: 'comment_21',
+        author: 'Sarah Chen',
+        authorUsername: 'cybersafetyexpert',
+        authorAvatar: 'https://via.placeholder.com/40/4CAF50/FFFFFF?text=SC',
+        text: 'Love the OWASP testing methodology you covered.',
+        timestamp: new Date('2023-10-12'),
+        likes: 45
+      },
+      {
+        id: 'comment_22',
+        author: 'Jason Perez',
+        authorUsername: 'jasonperez',
+        authorAvatar: 'https://via.placeholder.com/40/FF4081/FFFFFF?text=JP',
+        text: 'Could you cover mobile app testing in a future video?',
+        timestamp: new Date('2023-10-13'),
+        likes: 32
+      }
+    ]
+  },
+  {
+    title: 'Advanced Threat Research Methods',
+    description: 'Research methodologies for staying ahead of emerging cybersecurity threats.',
+    uploader: {
+      id: db.users.findOne({ username: 'securityresearcher' })._id.toString(),
+      name: 'Dr. Emily Wang',
+      username: 'securityresearcher',
+      avatar: 'https://via.placeholder.com/40/9C27B0/FFFFFF?text=EW'
+    },
+    videoUrl: '/videos/Prioritize.mp4',
+    thumbnailUrl: '/videos/Prioritize.mp4',
+    duration: 580,
+    category: 'Research',
+    views: 9800,
+    likes: 650,
+    dislikes: 7,
+    uploadDate: new Date('2023-09-20'),
+    tags: ['research', 'threat-hunting', 'intelligence'],
+    comments: [
+      {
+        id: 'comment_23',
+        author: 'Alex Rivera',
+        authorUsername: 'cloudarchitect',
+        authorAvatar: 'https://via.placeholder.com/40/2196F3/FFFFFF?text=AR',
+        text: 'The threat intelligence sources you mentioned are incredibly valuable.',
+        timestamp: new Date('2023-09-21'),
+        likes: 51
+      },
+      {
+        id: 'comment_24',
+        author: 'James Mitchell',
+        authorUsername: 'pentesterpro',
+        authorAvatar: 'https://via.placeholder.com/40/E91E63/FFFFFF?text=JM',
+        text: 'How do you prioritize which threats to research first?',
+        timestamp: new Date('2023-09-22'),
+        likes: 38
       }
     ]
   }
-]);
+];
 
-print('✅ Inserted 4 videos');
+db.videos.insertMany(videosData);
+
+print('✅ Inserted 9 videos');
 
 // Create indexes for better query performance
 db.videos.createIndex({ 'uploader.id': 1 });
@@ -159,9 +533,40 @@ db.users.createIndex({ 'subscriptions': 1 });
 
 print('✅ Created indexes on users collection');
 
+// Add some extra commenter users (for comments)
+db.users.insertMany([
+  {
+    username: 'datadefender',
+    name: 'Mike Johnson',
+    email: 'mike@boringmedia.co',
+    avatar: 'https://via.placeholder.com/40/2196F3/FFFFFF?text=DD',
+    bio: 'Data protection enthusiast.',
+    subscribers: 3400,
+    totalVideos: 0,
+    totalViews: 0,
+    joinDate: new Date('2023-07-12'),
+    subscriptions: []
+  },
+  {
+    username: 'resilientsec',
+    name: 'Lisa Park',
+    email: 'lisa@boringmedia.co',
+    avatar: 'https://via.placeholder.com/40/FF4081/FFFFFF?text=RS',
+    bio: 'Security architect and consultant.',
+    subscribers: 5800,
+    totalVideos: 0,
+    totalViews: 0,
+    joinDate: new Date('2023-04-08'),
+    subscriptions: []
+  }
+]);
+
+print('✅ Inserted 9 total users');
+
 print('🎉 MongoDB initialization complete!');
 print('📊 Database: boringmedia');
 print('📁 Collections: videos, users, comments');
-print('👥 Users: 2');
-print('🎬 Videos: 4');
+print('👥 Users: 9');
+print('🎬 Videos: 9');
+print('💬 Comments: 24');
 
