@@ -11,7 +11,7 @@
 [![NGINX](https://img.shields.io/badge/NGINX-Load%20Balancer-green?style=flat-square&logo=nginx)](./aws/k8s/ingress-nginx.yaml)
 
 <div align="center">
-  <img src="ui/public/images/bpclogo.png" alt="Boring Media Co Logo" width="300">
+  <img src="ui/public/images/bpclogo.png" alt="Boring Media Co Logo" width="300" style="filter: invert(1) brightness(1);">
 </div>
 
 **Boring Media Co** is a modern, AI-powered media streaming platform that enables users to upload and view videos with integrated AI chat assistance and security monitoring. Built with microservices architecture, it's designed to run seamlessly across multiple cloud providers.
