@@ -168,6 +168,22 @@ export const videoApi = {
       return null;
     }
   },
+
+  getRecommendation: async (): Promise<Video | null> => {
+    try {
+      // Use relative path to go through nginx proxy
+      const response = await fetch('/api/aichat/recommend');
+      if (!response.ok) {
+        console.warn('Recommendation API not available');
+        return null;
+      }
+      const data = await response.json();
+      return data.recommendedVideo;
+    } catch (error) {
+      console.error('Error fetching recommendation:', error);
+      return null;
+    }
+  },
 };
 
 export default {

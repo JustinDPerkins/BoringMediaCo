@@ -66,30 +66,17 @@ services:
       - "8080:80"             # host:container  → browse http://localhost:8080
     depends_on:
       - sdk-service           # ensure backend is up first
+      - aichat-service        # ensure AI chat service is up first
+      - containerxdr-service  # ensure ContainerXDR is up first
     environment:
       # Runtime base URL for your frontend to call the SDK API **inside** the Docker network
       VITE_API_BASE_URL: http://sdk-service:5000
-      VITE_OLLAMA_URL: http://ollama-service:11434
       VITE_AICHAT_URL: http://aichat-service:5001
+      VITE_AI_BASE_URL: http://aichat-service:5001
     volumes:
       # Mount videos directory - separated from UI public folder
       - ../media/videos:/usr/share/nginx/html/videos:ro
     restart: unless-stopped
-    networks:
-      - bpc-net
-
-  # ───────────── Ollama ───────────────
-  ollama-service:
-    # Use the arm64 version for Apple Silicon
-    image: ollama/ollama:latest
-    volumes:
-      - ollama-data:/root/.ollama
-    ports:
-      - "11434:11434"
-    platform: linux/arm64  # Ensures compatibility with Apple Silicon
-    environment:
-      - OLLAMA_HOST=0.0.0.0
-      - OLLAMA_ORIGINS=*
     networks:
       - bpc-net
 
@@ -100,11 +87,16 @@ services:
     ports:
       - "5001:5001"
     depends_on:
-      - ollama-service
+      - sdk-service
     environment:
-      - OLLAMA_URL=http://ollama-service:11434
+      # Use host machine's Ollama (MUCH faster than Docker Ollama on Mac)
+      # Run: ollama start   (in a separate terminal)
+      - OLLAMA_URL=http://host.docker.internal:11434
       - OLLAMA_MODEL=tinyllama:1.1b-chat  # Use smaller model for faster startup
       - API_KEY=${API_KEY}
+      - SDK_URL=http://sdk-service:5000
+    extra_hosts:
+      - "host.docker.internal:host-gateway"  # Enable access to host machine
     restart: unless-stopped
     networks:
       - bpc-net
@@ -120,7 +112,5 @@ networks:
 #  VOLUMES
 ############################
 volumes:
-  ollama-data:
-    driver: local
   mongodb_data:
     driver: local

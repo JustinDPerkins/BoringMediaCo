@@ -634,8 +634,11 @@ spec:
             cpu: "1000m"
       volumes:
       - name: mongodb-data
-        persistentVolumeClaim:
-          claimName: mongodb-pvc
+        # Temporarily use emptyDir until EBS CSI is configured
+        emptyDir:
+          sizeLimit: 10Gi
+        # persistentVolumeClaim:
+        #   claimName: mongodb-pvc
       - name: mongodb-init
         configMap:
           name: mongodb-init

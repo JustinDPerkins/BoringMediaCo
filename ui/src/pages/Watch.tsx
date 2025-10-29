@@ -11,6 +11,9 @@ import {
   TextField,
   Stack,
   Card,
+  Dialog,
+  DialogTitle,
+  DialogContent,
 } from '@mui/material';
 import {
   ThumbUp as ThumbUpIcon,
@@ -19,7 +22,9 @@ import {
   PlaylistAdd as SaveIcon,
   Reply as ReplyIcon,
   Visibility as ViewsIcon,
+  Close as CloseIcon,
 } from '@mui/icons-material';
+import WebTerminal from '../components/WebTerminal';
 
 interface Video {
   id: string;
@@ -199,11 +204,23 @@ const allVideos: Video[] = [
 const Watch: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const video = allVideos.find((v) => v.id === id);
+  
+  // Try to find video in local mock data first (for legacy IDs like '1', '2')
+  let video = allVideos.find((v) => v.id === id);
+  
+  // If not found in local data, try to look up by MongoDB ID
+  if (!video && id && id.length > 10) {
+    // This looks like a MongoDB ID, find in allVideos array
+    // For now, just use a fallback video until we fetch from API
+    video = allVideos[0]; // Use first video as fallback
+  }
+  
   const [liked, setLiked] = useState(false);
   const [disliked, setDisliked] = useState(false);
   const [likes, setLikes] = useState(video?.likes || 0);
   const [dislikes, setDislikes] = useState(video?.dislikes || 0);
+  const [terminalOpen, setTerminalOpen] = useState(false);
+  const [commentText, setCommentText] = useState('');
 
   if (!video) {
     return (
@@ -239,6 +256,16 @@ const Watch: React.FC = () => {
         setLikes(likes - 1);
         setLiked(false);
       }
+    }
+  };
+
+  const handleCommentSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (commentText.trim()) {
+      // Trigger terminal popup when user tries to comment
+      setTerminalOpen(true);
+      console.log('Comment submitted:', commentText);
+      // In a real scenario, this would send the comment to the backend
     }
   };
 
@@ -358,12 +385,24 @@ const Watch: React.FC = () => {
               {video.comments?.length || 0} Comments
             </Typography>
 
-            <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
+            <Box 
+              component="form" 
+              onSubmit={handleCommentSubmit}
+              sx={{ display: 'flex', gap: 2, mb: 3 }}
+            >
               <Avatar sx={{ width: 40, height: 40 }}>Y</Avatar>
               <TextField
                 fullWidth
                 placeholder="Add a comment..."
                 variant="outlined"
+                value={commentText}
+                onChange={(e) => setCommentText(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    handleCommentSubmit(e);
+                  }
+                }}
                 sx={{
                   '& .MuiOutlinedInput-root': {
                     color: '#f5f1e8',
@@ -492,6 +531,36 @@ const Watch: React.FC = () => {
           </Box>
         </Box>
       </Box>
+
+      {/* WebTerminal Modal */}
+      <Dialog
+        open={terminalOpen}
+        onClose={() => setTerminalOpen(false)}
+        maxWidth="lg"
+        fullWidth
+        PaperProps={{
+          sx: {
+            bgcolor: '#1a1a1a',
+            color: '#f5f1e8',
+            height: '80vh',
+            maxHeight: '800px',
+          },
+        }}
+      >
+        <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+          <Typography variant="h6" sx={{ color: '#f5f1e8' }}>
+            Terminal Access
+          </Typography>
+          <IconButton onClick={() => setTerminalOpen(false)} sx={{ color: '#f5f1e8' }}>
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent sx={{ p: 0, height: '100%', display: 'flex', flexDirection: 'column' }}>
+          <Box sx={{ flex: 1, position: 'relative', height: '100%' }}>
+            <WebTerminal />
+          </Box>
+        </DialogContent>
+      </Dialog>
     </Box>
   );
 };

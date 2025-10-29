@@ -2,6 +2,11 @@
 
 # Boring Media Co - EKS Deployment Script
 # Uses NGINX Ingress instead of AWS Load Balancer Controller for simplicity
+#
+# NOTE: This deployment uses 'emptyDir' for MongoDB and Ollama storage by default.
+#       For persistent storage, install EBS CSI add-on:
+#         aws eks create-addon --cluster-name <cluster> --addon-name aws-ebs-csi-driver --region <region>
+#       Then uncomment PVC lines in mongodb-deployment.yaml and ollama-deployment.yaml
 
 set -e
 
@@ -144,13 +149,39 @@ echo "📋 Deploying application resources..."
 kubectl apply -f namespace.yaml
 kubectl apply -f configmap.yaml
 kubectl apply -f secret.yaml
-kubectl apply -f pvc.yaml
+
+# Note: PVCs require EBS CSI add-on. Skip for now if not available.
+# The deployments are configured to use emptyDir as fallback
+# kubectl apply -f pvc.yaml
+
+# Install NVIDIA Device Plugin for GPU support
+echo "🎮 Installing NVIDIA Device Plugin..."
+kubectl apply -f https://raw.githubusercontent.com/NVIDIA/k8s-device-plugin/v0.18.0/deployments/static/nvidia-device-plugin.yml
+
+# Wait for device plugin to be ready
+echo "⏳ Waiting for NVIDIA Device Plugin..."
+kubectl wait --namespace kube-system \
+  --for=condition=ready pod \
+  --selector=app=nvidia-device-plugin-daemonset \
+  --timeout=60s 2>/dev/null || echo "⚠️  NVIDIA Device Plugin timeout (may still be starting)"
+
+# Check GPU availability on nodes
+echo ""
+echo "🖥️  Checking GPU nodes..."
+kubectl get nodes -o custom-columns=NAME:.metadata.name,GPU:.status.allocatable.nvidia\.com/gpu || echo "GPU nodes not yet ready"
+echo ""
 
 # Deploy MongoDB first (needed by SDK)
-echo "🗄️  Deploying MongoDB..."
+echo "🗄️  Deploying MongoDB (using emptyDir until EBS CSI is configured)..."
 kubectl apply -f mongodb-deployment.yaml
-sleep 5  # Give MongoDB a moment to start
+echo "⏳ Waiting for MongoDB to be ready..."
+kubectl wait --namespace boring-media-co \
+  --for=condition=ready pod \
+  --selector=app=mongodb \
+  --timeout=120s 2>/dev/null || echo "⚠️  MongoDB starting..."
+sleep 3  # Give MongoDB a moment to initialize
 
+echo "🤖 Deploying Ollama (GPU-accelerated)..."
 kubectl apply -f ollama-deployment.yaml
 kubectl apply -f sdk-deployment.yaml
 kubectl apply -f containerxdr-deployment.yaml
@@ -183,9 +214,14 @@ echo ""
 echo "📍 To get Load Balancer IP:"
 echo "   kubectl get service -n ingress-nginx ingress-nginx-controller"
 echo ""
-echo "🔍 To check EBS CSI Driver status:"
-echo "   kubectl get pods -n kube-system -l app=ebs-csi-controller"
+echo "💾 To enable persistent storage (optional):"
+echo "   1. Install EBS CSI add-on: aws eks create-addon --cluster-name <name> --addon-name aws-ebs-csi-driver"
+echo "   2. Update mongodb-deployment.yaml and ollama-deployment.yaml to use PVCs"
+echo "   3. Run: kubectl apply -f mongodb-deployment.yaml ollama-deployment.yaml"
 echo ""
-echo "💾 To test EBS volumes:"
-echo "   kubectl get pvc -n boring-media-co"
+echo "🎮 To check GPU nodes:"
+echo "   kubectl get nodes -o custom-columns=NAME:.metadata.name,GPU:.status.allocatable.nvidia\.com/gpu"
+echo ""
+echo "🧪 To test GPU with nvidia-smi:"
+echo "   kubectl apply -f nvidia-smi.yaml && kubectl logs nvidia-smi -n kube-system"
  

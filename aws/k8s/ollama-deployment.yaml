@@ -12,6 +12,8 @@ spec:
   resources:
     requests:
       storage: 20Gi
+  # Use local storage if EBS CSI is not ready
+  # comment out the PVC and use emptyDir volume instead
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -31,6 +33,9 @@ spec:
         app: ollama
         cloud-provider: aws
     spec:
+      # Target GPU node for Ollama
+      nodeSelector:
+        eks.amazonaws.com/nodegroup: boring-media-gpu
       initContainers:
       - name: model-downloader
         image: ollama/ollama:latest
@@ -61,13 +66,17 @@ spec:
           requests:
             memory: "2Gi"
             cpu: "500m"
+            nvidia.com/gpu: 1  # Request 1 GPU
           limits:
             memory: "6Gi"
             cpu: "1500m"
+            nvidia.com/gpu: 1  # Limit to 1 GPU
       volumes:
       - name: ollama-data
-        persistentVolumeClaim:
-          claimName: ollama-data
+        # Temporarily use emptyDir until EBS CSI is configured
+        emptyDir: {}
+        # persistentVolumeClaim:
+        #   claimName: ollama-data
 ---
 apiVersion: v1
 kind: Service

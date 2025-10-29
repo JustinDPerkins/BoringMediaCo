@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
   AppBar as MuiAppBar,
@@ -17,12 +17,31 @@ import {
 } from '@mui/icons-material';
 import { useCart } from '../context/CartContext';
 import logo from '../assets/bpclogo.png';
+import { searchService } from '../services/searchService';
 
 const AppBar: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { getItemCount } = useCart();
   const itemCount = getItemCount();
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const handleSearch = async (query: string) => {
+    if (!query.trim()) return;
+    
+    try {
+      const results = await searchService.search(query);
+      // For now, navigate to library with the search query as a parameter
+      // In the future, you could create a dedicated SearchResults page
+      navigate(`/library?search=${encodeURIComponent(query)}`, { 
+        state: { searchResults: results } 
+      });
+    } catch (error) {
+      console.error('Search failed:', error);
+      // Fallback: navigate to library without search results
+      navigate('/library');
+    }
+  };
 
   const navItems = [
     { label: 'Home', path: '/', icon: HomeIcon },
@@ -84,6 +103,13 @@ const AppBar: React.FC = () => {
             <input
               type="text"
               placeholder="Search videos..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  handleSearch(searchQuery);
+                }
+              }}
               style={{
                 background: 'transparent',
                 border: 'none',

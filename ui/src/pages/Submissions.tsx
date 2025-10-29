@@ -16,7 +16,7 @@ import {
 
 const Submissions: React.FC = () => {
   const [uploadFile, setUploadFile] = useState<File | null>(null);
-  const [watermarkData, setWatermarkData] = useState<string | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [securityEnabled, setSecurityEnabled] = useState(true);
   const [scanResult, setScanResult] = useState<any>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -29,17 +29,12 @@ const Submissions: React.FC = () => {
 
     setUploadFile(file);
 
-    // Load file for watermark display
-    if (file.type.startsWith('image/')) {
-      const reader = new FileReader();
-      reader.onloadend = () => setWatermarkData(reader.result as string);
-      reader.readAsDataURL(file);
-    } else if (file.type === 'text/plain' || file.name.endsWith('.txt')) {
-      const reader = new FileReader();
-      reader.onloadend = () => setWatermarkData(reader.result as string);
-      reader.readAsText(file);
+    // Create preview URL for video/image files
+    if (file.type.startsWith('video/') || file.type.startsWith('image/')) {
+      const url = URL.createObjectURL(file);
+      setPreviewUrl(url);
     } else {
-      setWatermarkData(file.name);
+      setPreviewUrl(null);
     }
 
     setUploadError(null);
@@ -76,8 +71,18 @@ const Submissions: React.FC = () => {
     }
   };
 
-  const isImageWatermark = uploadFile?.type.startsWith('image/');
+  const isVideo = uploadFile?.type.startsWith('video/');
+  const isImage = uploadFile?.type.startsWith('image/');
   const isSuccess = scanResult?.scan_result_code === 0;
+  
+  // Cleanup preview URL on unmount
+  React.useEffect(() => {
+    return () => {
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
+    };
+  }, [previewUrl]);
 
   return (
     <Box
@@ -243,74 +248,60 @@ const Submissions: React.FC = () => {
             </Paper>
           </Box>
 
-          {/* RIGHT SIDE - Canvas/Preview */}
+          {/* RIGHT SIDE - Video Preview */}
           <Box sx={{ width: '60%' }}>
             <Paper sx={{ p: 3, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', height: '100%', display: 'flex', flexDirection: 'column' }}>
               <Typography variant="h6" gutterBottom sx={{ color: 'rgba(255,255,255,0.9)', mb: 2, fontSize: '1rem' }}>
                 Video Preview
               </Typography>
               
-              {watermarkData ? (
+              {previewUrl ? (
                 <Box
                   sx={{
-                    border: '1px solid rgba(245, 241, 232, 0.2)',
+                    border: '1px solid rgba(255,255,255,0.2)',
                     borderRadius: 2,
-                    p: 4,
-                    textAlign: 'center',
+                    overflow: 'hidden',
                     flex: 1,
                     minHeight: 0,
-                    position: 'relative',
-                    background: 'linear-gradient(135deg, #f5f1e8 0%, #e6ddd1 100%)',
-                    color: '#1a1a1a',
-                    overflow: 'hidden',
+                    background: '#000',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
                   }}
                 >
-                  <Typography variant="body1" sx={{ color: '#666', mb: 3 }}>
-                    🎬 Boring Media Co
-                  </Typography>
-
-                  {/* Watermark Overlay */}
-                  <Box
-                    sx={{
-                      position: 'absolute',
-                      left: '50%',
-                      top: '50%',
-                      transform: 'translate(-50%, -50%)',
-                      opacity: 0.35,
-                      pointerEvents: 'none',
-                      maxWidth: '80%',
-                      maxHeight: '80%',
-                    }}
-                  >
-                    {isImageWatermark ? (
-                      <Box
-                        component="img"
-                        src={watermarkData}
-                        alt="Watermark"
-                        sx={{
-                          width: '100%',
-                          height: 'auto',
-                          objectFit: 'contain',
-                        }}
-                      />
-                    ) : (
-                      <Typography
-                        sx={{
-                          fontSize: '4rem',
-                          fontWeight: 900,
-                          color: '#888',
-                          textShadow: '2px 2px 4px rgba(0,0,0,0.2)',
-                          letterSpacing: '4px',
-                          transform: 'rotate(-25deg)',
-                        }}
-                      >
-                        {watermarkData.length > 25 ? watermarkData.slice(0, 25) + '...' : watermarkData}
-                      </Typography>
-                    )}
-                  </Box>
+                  {isVideo ? (
+                    <video
+                      src={previewUrl}
+                      controls
+                      style={{
+                        maxWidth: '100%',
+                        maxHeight: '100%',
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'contain',
+                      }}
+                    />
+                  ) : isImage ? (
+                    <Box
+                      component="img"
+                      src={previewUrl}
+                      alt="Preview"
+                      sx={{
+                        maxWidth: '100%',
+                        maxHeight: '100%',
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'contain',
+                      }}
+                    />
+                  ) : (
+                    <Typography sx={{ color: 'rgba(255,255,255,0.4)' }}>
+                      Unsupported file type
+                    </Typography>
+                  )}
                 </Box>
               ) : (
-                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 1 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 1, background: 'rgba(0,0,0,0.2)', borderRadius: 2 }}>
                   <Typography sx={{ color: 'rgba(255,255,255,0.4)', textAlign: 'center' }}>
                     Select a video to preview
                   </Typography>

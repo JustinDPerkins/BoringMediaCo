@@ -1,5 +1,5 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   Box,
   Typography,
@@ -68,6 +68,35 @@ const allVideos: VideoCard[] = [
 
 const Library: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [displayVideos, setDisplayVideos] = useState<VideoCard[]>(allVideos);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  useEffect(() => {
+    // Check if we have search results from navigation
+    const state = location.state as any;
+    if (state?.searchResults && state.searchResults.length > 0) {
+      // Convert search results to VideoCard format
+      const formattedVideos = state.searchResults.map((v: any) => ({
+        id: v._id || v.id,
+        title: v.title,
+        uploader: v.uploader?.name || 'Unknown',
+        views: v.views || 0,
+        likes: v.likes || 0,
+        videoSrc: v.videoUrl || '',
+        duration: `${Math.floor((v.duration || 0) / 60)}:${String((v.duration || 0) % 60).padStart(2, '0')}`,
+        category: v.category || 'Uncategorized',
+      }));
+      setDisplayVideos(formattedVideos);
+    }
+
+    // Check if there's a search query in URL
+    const params = new URLSearchParams(location.search);
+    const query = params.get('search');
+    if (query) {
+      setSearchQuery(query);
+    }
+  }, [location]);
 
   return (
     <Box
@@ -89,30 +118,40 @@ const Library: React.FC = () => {
               color: '#f5f1e8',
             }}
           >
-            Video Library
+            {searchQuery ? `Search Results for "${searchQuery}"` : 'Video Library'}
           </Typography>
           <Typography
             variant="body2"
             sx={{ color: 'rgba(245, 241, 232, 0.7)' }}
           >
-            {allVideos.length} videos available
+            {displayVideos.length} {displayVideos.length === 1 ? 'video' : 'videos'} {searchQuery ? 'found' : 'available'}
           </Typography>
         </Box>
 
         {/* Video Grid */}
-        <Box
-          sx={{
-            display: 'grid',
-            gridTemplateColumns: {
-              xs: '1fr',
-              sm: 'repeat(2, 1fr)',
-              md: 'repeat(3, 1fr)',
-              lg: 'repeat(4, 1fr)',
-            },
-            gap: 3,
-          }}
-        >
-          {allVideos.map((video) => (
+        {displayVideos.length === 0 ? (
+          <Box sx={{ textAlign: 'center', py: 8 }}>
+            <Typography variant="h6" sx={{ color: 'rgba(245, 241, 232, 0.7)', mb: 2 }}>
+              No videos found
+            </Typography>
+            <Typography variant="body2" sx={{ color: 'rgba(245, 241, 232, 0.5)' }}>
+              Try searching for something else
+            </Typography>
+          </Box>
+        ) : (
+          <Box
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: {
+                xs: '1fr',
+                sm: 'repeat(2, 1fr)',
+                md: 'repeat(3, 1fr)',
+                lg: 'repeat(4, 1fr)',
+              },
+              gap: 3,
+            }}
+          >
+            {displayVideos.map((video) => (
             <Card
               key={video.id}
               sx={{
@@ -231,8 +270,9 @@ const Library: React.FC = () => {
                 </Box>
               </CardContent>
             </Card>
-          ))}
-        </Box>
+            ))}
+          </Box>
+        )}
       </Box>
     </Box>
   );
