@@ -127,8 +127,8 @@ const Home: React.FC = () => {
       sx={{
         minHeight: 'calc(100vh - 64px)',
         background: 'linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%)',
-        py: 4,
-        px: 3,
+        py: { xs: 2, sm: 3, md: 4 },
+        px: { xs: 2, sm: 3 },
       }}
     >
       <Box sx={{ maxWidth: '1400px', mx: 'auto' }}>

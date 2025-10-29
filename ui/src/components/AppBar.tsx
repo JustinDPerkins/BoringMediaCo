@@ -7,6 +7,7 @@ import {
   Button,
   Box,
   Badge,
+  IconButton,
 } from '@mui/material';
 import {
   Home as HomeIcon,
@@ -57,32 +58,41 @@ const AppBar: React.FC = () => {
 
   return (
     <MuiAppBar position="sticky">
-      <Toolbar sx={{ justifyContent: 'space-between', px: 3, gap: 2 }}>
+      <Toolbar sx={{ justifyContent: 'space-between', px: { xs: 1, sm: 2, md: 3 }, gap: 2 }}>
         <Box
           sx={{
             display: 'flex',
             alignItems: 'center',
-            gap: 2,
+            gap: { xs: 1, sm: 2 },
             cursor: 'pointer',
           }}
           onClick={() => navigate('/')}
         >
-          <img
+          <Box
+            component="img"
             src={logo}
             alt="Boring Media Co Logo"
-            style={{
-              height: '60px',
+            sx={{
+              height: { xs: '40px', sm: '50px', md: '60px' },
               width: 'auto',
               filter: 'invert(1) brightness(1.2)',
               mixBlendMode: 'screen',
             }}
           />
-          <Typography variant="h6" sx={{ fontWeight: 700, letterSpacing: '1px' }}>
+          <Typography 
+            variant="h6" 
+            sx={{ 
+              fontWeight: 700, 
+              letterSpacing: '1px',
+              fontSize: { xs: '0.75rem', sm: '1rem', md: '1.25rem' },
+              display: { xs: 'none', sm: 'block' }
+            }}
+          >
             BORING MEDIA CO
           </Typography>
         </Box>
 
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flex: 1, maxWidth: '800px', mx: 4 }}>
+        <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 2, flex: 1, maxWidth: '800px', mx: 4 }}>
           {/* Search Bar */}
           <Box
             sx={{
@@ -99,7 +109,7 @@ const AppBar: React.FC = () => {
               },
             }}
           >
-            <SearchIcon sx={{ color: 'rgba(255, 255, 255, 0.5)', mr: 1 }} />
+            <SearchIcon sx={{ color: 'rgba(255, 255, 255, 0.5)', mr: 1, fontSize: { xs: 18, sm: 24 } }} />
             <input
               type="text"
               placeholder="Search videos..."
@@ -122,7 +132,7 @@ const AppBar: React.FC = () => {
           </Box>
         </Box>
 
-        <Box sx={{ display: 'flex', gap: 1 }}>
+        <Box sx={{ display: { xs: 'none', sm: 'flex' }, gap: 1 }}>
           {navItems.map(({ label, path, icon: Icon, badge }) => {
             const isActive = location.pathname === path;
             return (
@@ -143,15 +153,31 @@ const AppBar: React.FC = () => {
                   color: isActive ? '#FFFFFF' : 'rgba(255, 255, 255, 0.8)',
                   bgcolor: isActive ? 'rgba(33, 150, 243, 0.3)' : 'transparent',
                   fontWeight: 600,
+                  padding: { xs: '6px 8px', sm: '8px 16px' },
+                  fontSize: { xs: '0.75rem', sm: '0.875rem' },
+                  minWidth: { xs: 'auto', sm: '64px' },
                   '&:hover': {
                     bgcolor: 'rgba(33, 150, 243, 0.2)',
                   },
                 }}
               >
-                {label}
+                <Box sx={{ display: { xs: 'none', md: 'block' } }}>{label}</Box>
               </Button>
             );
           })}
+        </Box>
+
+        {/* Mobile Search Icon */}
+        <Box sx={{ display: { xs: 'block', md: 'none' } }}>
+          <IconButton
+            onClick={() => {
+              // For mobile, could open a search dialog
+              handleSearch(searchQuery);
+            }}
+            sx={{ color: 'rgba(255, 255, 255, 0.8)' }}
+          >
+            <SearchIcon />
+          </IconButton>
         </Box>
       </Toolbar>
     </MuiAppBar>

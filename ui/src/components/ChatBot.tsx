@@ -73,8 +73,8 @@ export default function ChatBot() {
     <Box
       sx={{
         position: 'fixed',
-        bottom: 24,
-        right: 24,
+        bottom: { xs: 16, sm: 24 },
+        right: { xs: 16, sm: 24 },
         zIndex: 1000,
       }}
     >
@@ -82,8 +82,10 @@ export default function ChatBot() {
         <Paper
           elevation={8}
           sx={{
-            width: 350,
-            height: 500,
+            width: { xs: 'calc(100vw - 32px)', sm: 350 },
+            maxWidth: { xs: '100%', sm: '350px' },
+            height: { xs: 'calc(100vh - 100px)', sm: 500 },
+            maxHeight: { xs: 'calc(100vh - 100px)', sm: 500 },
             display: 'flex',
             flexDirection: 'column',
             mb: 1,
@@ -207,6 +209,8 @@ export default function ChatBot() {
       <IconButton
         onClick={() => setIsOpen(!isOpen)}
         sx={{
+          width: { xs: 48, sm: 56 },
+          height: { xs: 48, sm: 56 },
           bgcolor: 'rgba(245, 241, 232, 0.1)',
           color: 'text.primary',
           '&:hover': {

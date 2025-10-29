@@ -87,9 +87,9 @@ const Submissions: React.FC = () => {
   return (
     <Box
       sx={{
-        height: 'calc(100vh - 64px)',
+        minHeight: 'calc(100vh - 64px)',
         background: 'linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%)',
-        p: 3,
+        p: { xs: 2, sm: 3 },
       }}
     >
       <Box sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
@@ -104,17 +104,17 @@ const Submissions: React.FC = () => {
         </Box>
 
         {/* Main Content - Left/Right Split */}
-        <Box sx={{ flex: 1, display: 'flex', gap: 3, minHeight: 0 }}>
+        <Box sx={{ flex: 1, display: 'flex', gap: 3, minHeight: 0, flexDirection: { xs: 'column', lg: 'row' } }}>
           {/* LEFT SIDE - Upload + Response */}
-          <Box sx={{ width: '40%', display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <Box sx={{ width: { xs: '100%', lg: '40%' }, display: 'flex', flexDirection: 'column', gap: 2 }}>
             {/* Upload Controls */}
-            <Paper sx={{ p: 3, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', flexShrink: 0 }}>
+            <Paper sx={{ p: { xs: 2, sm: 3 }, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', flexShrink: 0 }}>
               {/* File Upload Area */}
               <Box
                 sx={{
                   border: '2px dashed rgba(255,255,255,0.2)',
                   borderRadius: 2,
-                  p: 3,
+                  p: { xs: 2, sm: 3 },
                   textAlign: 'center',
                   background: 'rgba(0,0,0,0.2)',
                   mb: 2,
@@ -130,11 +130,12 @@ const Submissions: React.FC = () => {
                 <input
                   ref={fileInputRef}
                   type="file"
+                  accept="video/*,image/*"
                   onChange={handleFileChange}
                   style={{ display: 'none' }}
                 />
-                <UploadIcon sx={{ fontSize: 48, color: 'rgba(255,255,255,0.5)', mb: 1 }} />
-                <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.7)' }}>
+                <UploadIcon sx={{ fontSize: { xs: 36, sm: 48 }, color: 'rgba(255,255,255,0.5)', mb: 1 }} />
+                <Typography variant="body2" sx={{ color: 'rgba(255,255,255,0.7)', wordBreak: 'break-word' }}>
                   {uploadFile ? uploadFile.name : 'Click to upload video'}
                 </Typography>
               </Box>
@@ -213,8 +214,8 @@ const Submissions: React.FC = () => {
             </Paper>
 
             {/* Scan Results */}
-            <Paper sx={{ p: 2, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
-              <Typography variant="h6" gutterBottom sx={{ color: 'rgba(255,255,255,0.9)', mb: 1.5, fontSize: '0.875rem' }}>
+            <Paper sx={{ p: { xs: 1.5, sm: 2 }, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', flex: 1, display: 'flex', flexDirection: 'column', minHeight: { xs: '200px', lg: 'auto' } }}>
+              <Typography variant="h6" gutterBottom sx={{ color: 'rgba(255,255,255,0.9)', mb: { xs: 1, sm: 1.5 }, fontSize: { xs: '0.75rem', sm: '0.875rem' } }}>
                 Upload Status
               </Typography>
 
@@ -232,8 +233,8 @@ const Submissions: React.FC = () => {
                   />
 
                   {/* Compact JSON Display */}
-                  <Box sx={{ background: 'rgba(0,0,0,0.3)', p: 1.5, borderRadius: 1, flex: 1, overflow: 'auto' }}>
-                    <pre style={{ margin: 0, whiteSpace: 'pre-wrap', wordBreak: 'break-word', color: 'rgba(255,255,255,0.8)', fontSize: '0.7rem', lineHeight: 1.3 }}>
+                  <Box sx={{ background: 'rgba(0,0,0,0.3)', p: { xs: 1, sm: 1.5 }, borderRadius: 1, flex: 1, overflow: 'auto' }}>
+                    <pre style={{ margin: 0, whiteSpace: 'pre-wrap', wordBreak: 'break-word', color: 'rgba(255,255,255,0.8)', fontSize: '0.65rem', lineHeight: 1.3 }}>
                       {JSON.stringify(scanResult, null, 2)}
                     </pre>
                   </Box>
@@ -249,9 +250,9 @@ const Submissions: React.FC = () => {
           </Box>
 
           {/* RIGHT SIDE - Video Preview */}
-          <Box sx={{ width: '60%' }}>
-            <Paper sx={{ p: 3, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', height: '100%', display: 'flex', flexDirection: 'column' }}>
-              <Typography variant="h6" gutterBottom sx={{ color: 'rgba(255,255,255,0.9)', mb: 2, fontSize: '1rem' }}>
+          <Box sx={{ width: { xs: '100%', lg: '60%' } }}>
+            <Paper sx={{ p: { xs: 2, sm: 3 }, background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', height: '100%', display: 'flex', flexDirection: 'column', minHeight: { xs: '300px', lg: 'auto' } }}>
+              <Typography variant="h6" gutterBottom sx={{ color: 'rgba(255,255,255,0.9)', mb: { xs: 1.5, sm: 2 }, fontSize: { xs: '0.875rem', sm: '1rem' } }}>
                 Video Preview
               </Typography>
               
