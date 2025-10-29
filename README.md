@@ -1,8 +1,8 @@
 # Boring Media Co - AI-Powered Media Streaming Platform
 
 [![AWS EKS](https://img.shields.io/badge/AWS%20EKS-Deployed-success?style=for-the-badge&logo=amazon-aws&logoColor=white)](./aws/)
-[![Azure AKS](https://img.shields.io/badge/Azure%20AKS-Deployed-success?style=for-the-badge&logo=microsoft-azure&logoColor=white)](./azure/)
-[![GCP GKE](https://img.shields.io/badge/GCP%20GKE-Deployed-success?style=for-the-badge&logo=google-cloud&logoColor=white)](./gcp/)
+[![Azure AKS](https://img.shields.io/badge/Azure%20AKS-Available-inactive?style=for-the-badge&logo=microsoft-azure&logoColor=white)](./azure/)
+[![GCP GKE](https://img.shields.io/badge/GCP%20GKE-Available-inactive?style=for-the-badge&logo=google-cloud&logoColor=white)](./gcp/)
 
 [![Terraform](https://img.shields.io/badge/Terraform-Infrastructure-blue?style=flat-square&logo=terraform)](./aws/iac/)
 [![Kubernetes](https://img.shields.io/badge/Kubernetes-Orchestration-blue?style=flat-square&logo=kubernetes)](./aws/k8s/)
