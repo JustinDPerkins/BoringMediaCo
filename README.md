@@ -31,7 +31,7 @@
 
 ## 🏗️ Architecture Overview
 
-Boring Media Co is built using a **microservices architecture** with 5 core services:
+Boring Media Co is built using a **microservices architecture** with 5 core services
 
 | Service | Purpose | Technology |
 |---------|---------|------------|
