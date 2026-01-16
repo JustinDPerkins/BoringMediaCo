@@ -14,7 +14,7 @@
   <img src="ui/public/images/lightlogo.png" alt="Boring Media Co Logo" width="300">
 </div>
 
-**Boring Media Co** is a modern, AI-powered media streaming platform that enables users to upload and view videos with integrated AI chat assistance and security monitoring. Built with microservices architecture, it's designed to run seamlessly across multiple cloud providers.
+**Boring Media Co** is a modern, AI-powered media streaming platform that enables users to upload and view videos with integrated AI chat assistance and security monitoring. Built with microservices architecture, it's designed to run seamlessly across multiple cloud providers
 
 ## 🎯 What Does Boring Media Co Do?
 
