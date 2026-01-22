@@ -1,4 +1,4 @@
-# Boring Media Co - AI-Powered Media Streaming Platform
+# Boring Media Co - AI-Powered Media Streaming Platform.
 
 [![AWS EKS](https://img.shields.io/badge/AWS%20EKS-Deployed-success?style=for-the-badge&logo=amazon-aws&logoColor=white)](./aws/)
 [![Azure AKS](https://img.shields.io/badge/Azure%20AKS-Available-inactive?style=for-the-badge&logo=microsoft-azure&logoColor=white)](./azure/)
